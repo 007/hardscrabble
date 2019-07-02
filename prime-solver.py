@@ -24,7 +24,8 @@ def get_letter_primes(alphabet_size=LETTER_COUNT):
       candidate += 2
     return primes
 
-def load_dict(filename='twl06.txt', max_len=100):
+# load a dictionary from file, filtering by word length
+def load_dict(filename='twl06.txt', max_len=LONGEST_WORD):
     dictionary = []
     with open(filename, 'r') as fh:
         for line in fh:
@@ -33,6 +34,7 @@ def load_dict(filename='twl06.txt', max_len=100):
                 dictionary.append(word)
     return dictionary
 
+# calcuate letter frequencies for all characters of all lines
 def calculate_frequencies(d):
     freqs = {}
     for line in d:
@@ -43,21 +45,23 @@ def calculate_frequencies(d):
                 freqs[letter] = 1
     return freqs
 
-# map a list of primes to a dictionary sorted by frequency
+# map a list of primes to a letter dictionary sorted by frequency
 def freq_to_map(freq, primes):
     outmap = {}
     for f, p in zip(sorted(freq, key=freq.get, reverse=True), primes):
         outmap[f] = p
     return outmap
 
-def dict_to_composite(symbol_map, dictionary):
+# map a dictionary to a list of values letter-by-letter
+def dict_to_composite(letter_map, dictionary):
     mapped_words = []
     for word in dictionary:
         total = 1
         for l in word:
-            total *= symbol_map[l]
+            total *= letter_map[l]
         mapped_words.append((word, total))
     return mapped_words
+
 
 if __name__ == "__main__":
 
@@ -67,7 +71,7 @@ if __name__ == "__main__":
     max_check = max_prime ** LONGEST_WORD
     bits = max_check.bit_length()
     print ("highest of {} primes is {} and gives {} bits for max {}".format(len(primes), max_prime, bits, max_check))
-    dictionary = load_dict('twl06.txt', LONGEST_WORD)
+    dictionary = load_dict()
     print("one word is {}".format(dictionary[-1]))
 
     freq = calculate_frequencies(dictionary)
