@@ -57,13 +57,18 @@ def freq_to_map(freq, primes):
         outmap[f] = p
     return outmap
 
+# map a word to a composite value letter-by-letter
+def word_to_composite(letter_map, word):
+    total = 1
+    for l in word:
+        total *= letter_map[l]
+    return total
+
 # map a dictionary to a list of values letter-by-letter
 def dict_to_composite(letter_map, dictionary):
     mapped_words = []
     for word in dictionary:
-        total = 1
-        for l in word:
-            total *= letter_map[l]
+        total = word_to_composite(letter_map, word)
         mapped_words.append((word, total))
     return mapped_words
 
@@ -71,14 +76,8 @@ def score_words(words, letter_mapping, candidates):
     # force candidates to be a list instead of str
     # list(list) and list(str) return the same result!
     candidates = list(candidates)
-    # for each letter
-    word = 1
-    for l in candidates:
-        # get the prime mapping for the letter
-        factor = letter_mapping[l]
-        # multiply out our word
-        word = word * factor
-
+    # map it to a composite
+    word = word_to_composite(letter_mapping, candidates)
     matches = ne.evaluate('word % words')
 
     # now that we've done the math, find where our words are evenly divisible
