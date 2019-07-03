@@ -1,4 +1,5 @@
 from math import floor, sqrt
+import numpy as np
 
 LONGEST_WORD = 8
 LETTER_COUNT = 26
@@ -62,26 +63,54 @@ def dict_to_composite(letter_map, dictionary):
         mapped_words.append((word, total))
     return mapped_words
 
+def score_words(words, letter_mapping, candidates):
+    # force candidates to be a list instead of str
+    # list(list) and list(str) return the same result!
+    candidates = list(candidates)
+    # for each letter
+    for l in candidates:
+        # get the prime mapping for the letter
+        factor = letter_mapping[l]
+#        print("Checking {} value {}".format(l, factor))
+
+        # find where word is evenly divisible by letter
+        result = words % factor == 0
+        # now we have an array of [True, False]
+        # map that to a divisor, so we end up with [factor, 1]
+
+        result = result + 1
+        result = factor ** result
+        result = result // factor
+        remapped = words // result
+        words = remapped
+
+    # now that we've done the math, find where our words indexes are 1
+    end_words = np.nonzero(words == 1)
+
+    return end_words[0]
+
 
 if __name__ == "__main__":
-
     primes = get_letter_primes()
     max_prime = primes[-1]
 
     max_check = max_prime ** LONGEST_WORD
     bits = max_check.bit_length()
-    print ("highest of {} primes is {} and gives {} bits for max {}".format(len(primes), max_prime, bits, max_check))
     dictionary = load_dict()
-    print("one word is {}".format(dictionary[-1]))
 
     freq = calculate_frequencies(dictionary)
     prime_mapping = freq_to_map(freq, primes)
-    print(prime_mapping)
 
     all_words = dict_to_composite(prime_mapping, dictionary)
-    print(all_words[0])
 
     # get highest-value word and its associated value
     (max_word,  max_value) = sorted(all_words, key=lambda t: t[1], reverse=True)[0]
     bits = max_value.bit_length()
     print("Hardest word is {} with score of {} and {} bits".format(max_word, max_value, bits))
+
+    all_scores = np.array([ v[1] for v in all_words ])
+    matches = score_words(all_scores, prime_mapping, 'gssyrlo')
+
+    for e in matches:
+        print(all_words[e][0])
+
