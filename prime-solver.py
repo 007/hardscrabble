@@ -78,9 +78,10 @@ def score_words(words, letter_mapping, candidates):
     candidates = list(candidates)
     # map it to a composite
     word = word_to_composite(letter_mapping, candidates)
+    # broadcast remainder against all words
     matches = ne.evaluate('word % words')
-
-    # now that we've done the math, find where our words are evenly divisible
+    # alternatively:    matches = np.remainder(word, words)
+    # find where our words are evenly divisible
     end_words = np.nonzero(matches == 0)
 
     return end_words[0]
