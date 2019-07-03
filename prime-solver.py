@@ -72,23 +72,20 @@ def score_words(words, letter_mapping, candidates):
     # list(list) and list(str) return the same result!
     candidates = list(candidates)
     # for each letter
+    word = 1
     for l in candidates:
         # get the prime mapping for the letter
         factor = letter_mapping[l]
+        # multiply out our word
+        word = word * factor
+    #print("ended up with {} for {}".format(word, ''.join(candidates)))
 
-        # # find where word is evenly divisible by letter
-        # mod_result = words % factor == 0
-        # # now we have an array of [True, False]
-        # # map that to a divisor, so we end up with [factor, 1]
-        # remapped = (mod_result * (factor - 1)) + 1
-        # # divide by (matching letter || 1)
-        # words = words // remapped
-        # the compact form:
-        #words = words / (((words % factor == 0) * (factor - 1)) + 1)
-        words = ne.evaluate('words / (((words % factor == 0) * (factor - 1)) + 1)')
+    #matches = word % words
+    matches = ne.evaluate('word % words')
 
-    # now that we've done the math, find where our words indexes are 1
-    end_words = np.nonzero(words == 1)
+    # now that we've done the math, find where our words are evenly divisible
+    end_words = np.nonzero(word % words == 0)
+    #print(end_words)
 
     return end_words[0]
 
