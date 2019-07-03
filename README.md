@@ -62,6 +62,8 @@ In our case, we try `554400 / 1100` and we get `504` and no remainder, so `RADAR
 
 I haven't written the "simple" version to bench against it, but it's pretty fast.
 
+It should be faster than most string-based methods simply due to byte sizes. In our example `RADAR` is `1100` which is only about 10 bits, versus storing each character separately is 5 bytes. For `ABRACADABRA` the savings is about 20 bits vs 11 bytes. For these simple examples the savings is over 75%, in real life it's more like 25% size reduction versus storing raw bytes.
+
 Testing all words of 8 or fewer letters in SOWPODS takes under a minute on a 2017 MBP:
 
 ```
@@ -84,4 +86,3 @@ real	2m23.500s
 user	2m23.001s
 sys	0m0.462s
 ```
-
