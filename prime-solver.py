@@ -78,10 +78,10 @@ def score_words(words, letter_mapping, candidates):
         result = words % factor == 0
         # now we have an array of [True, False]
         # map that to a divisor, so we end up with [factor, 1]
-
-        result = result + 1
-        result = factor ** result
-        result = result // factor
+#       result = result + 1
+#       result = factor ** result
+#       result = result // factor
+        result = (result * (factor - 1)) + 1
         remapped = words // result
         words = remapped
 
