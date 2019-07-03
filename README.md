@@ -86,3 +86,5 @@ real	2m23.500s
 user	2m23.001s
 sys	0m0.462s
 ```
+
+_Note: I thought this was clever and unique, but the first 5 or 6 results for `anagram solver python` all reference "use primes for letters". At least this version is a bit faster than those. `/shrug`_
