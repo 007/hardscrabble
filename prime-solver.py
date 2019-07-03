@@ -1,3 +1,4 @@
+import gzip
 import sys
 from math import floor, sqrt
 
@@ -28,9 +29,9 @@ def get_letter_primes(alphabet_size=LETTER_COUNT):
     return primes
 
 # load a dictionary from file, filtering by word length
-def load_dict(filename='test.txt', max_len=LONGEST_WORD):
+def load_dict(filename='test.txt.gz', max_len=LONGEST_WORD):
     dictionary = []
-    with open(filename, 'r') as fh:
+    with gzip.open(filename, 'rt') as fh:
         for line in fh:
             word = line.rstrip('\n').lower()
             if len(word) <= max_len and len(word) > 2:
