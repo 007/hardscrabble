@@ -31,7 +31,7 @@ def load_dict(filename='twl06.txt', max_len=LONGEST_WORD):
     with open(filename, 'r') as fh:
         for line in fh:
             word = line.rstrip('\n')
-            if len(word) <= max_len:
+            if len(word) <= max_len and len(word) > 2:
                 dictionary.append(word)
     return dictionary
 
@@ -109,7 +109,9 @@ if __name__ == "__main__":
     print("Hardest word is {} with score of {} and {} bits".format(max_word, max_value, bits))
 
     all_scores = np.array([ v[1] for v in all_words ])
-    matches = score_words(all_scores, prime_mapping, 'gssyrlo')
+
+    for w in dictionary:
+        matches = score_words(all_scores, prime_mapping, w)
 
     for e in matches:
         print(all_words[e][0])
