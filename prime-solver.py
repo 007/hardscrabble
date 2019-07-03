@@ -78,14 +78,11 @@ def score_words(words, letter_mapping, candidates):
         factor = letter_mapping[l]
         # multiply out our word
         word = word * factor
-    #print("ended up with {} for {}".format(word, ''.join(candidates)))
 
-    #matches = word % words
     matches = ne.evaluate('word % words')
 
     # now that we've done the math, find where our words are evenly divisible
-    end_words = np.nonzero(word % words == 0)
-    #print(end_words)
+    end_words = np.nonzero(matches == 0)
 
     return end_words[0]
 
