@@ -3,6 +3,7 @@ import sys
 from math import floor, sqrt
 
 import numpy as np
+import numexpr as ne
 
 LONGEST_WORD = 8
 LETTER_COUNT = 26
@@ -75,13 +76,16 @@ def score_words(words, letter_mapping, candidates):
         # get the prime mapping for the letter
         factor = letter_mapping[l]
 
-        # find where word is evenly divisible by letter
-        mod_result = words % factor == 0
-        # now we have an array of [True, False]
-        # map that to a divisor, so we end up with [factor, 1]
-        remapped = (mod_result * (factor - 1)) + 1
-        # divide by (matching letter || 1)
-        words = words // remapped
+        # # find where word is evenly divisible by letter
+        # mod_result = words % factor == 0
+        # # now we have an array of [True, False]
+        # # map that to a divisor, so we end up with [factor, 1]
+        # remapped = (mod_result * (factor - 1)) + 1
+        # # divide by (matching letter || 1)
+        # words = words // remapped
+        # the compact form:
+        #words = words / (((words % factor == 0) * (factor - 1)) + 1)
+        words = ne.evaluate('words / (((words % factor == 0) * (factor - 1)) + 1)')
 
     # now that we've done the math, find where our words indexes are 1
     end_words = np.nonzero(words == 1)
