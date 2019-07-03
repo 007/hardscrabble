@@ -1,4 +1,6 @@
+import sys
 from math import floor, sqrt
+
 import numpy as np
 
 LONGEST_WORD = 8
@@ -26,11 +28,11 @@ def get_letter_primes(alphabet_size=LETTER_COUNT):
     return primes
 
 # load a dictionary from file, filtering by word length
-def load_dict(filename='twl06.txt', max_len=LONGEST_WORD):
+def load_dict(filename='test.txt', max_len=LONGEST_WORD):
     dictionary = []
     with open(filename, 'r') as fh:
         for line in fh:
-            word = line.rstrip('\n')
+            word = line.rstrip('\n').lower()
             if len(word) <= max_len and len(word) > 2:
                 dictionary.append(word)
     return dictionary
@@ -71,7 +73,6 @@ def score_words(words, letter_mapping, candidates):
     for l in candidates:
         # get the prime mapping for the letter
         factor = letter_mapping[l]
-#        print("Checking {} value {}".format(l, factor))
 
         # find where word is evenly divisible by letter
         result = words % factor == 0
@@ -110,9 +111,14 @@ if __name__ == "__main__":
 
     all_scores = np.array([ v[1] for v in all_words ])
 
-    for w in dictionary:
-        matches = score_words(all_scores, prime_mapping, w)
-
-    for e in matches:
-        print(all_words[e][0])
-
+    if len(sys.argv) > 1:
+        word = sys.argv[1]
+        matches = score_words(all_scores, prime_mapping, word)
+        for e in matches:
+            print(all_words[e][0])
+    else:
+        match_count = 0
+        for w in dictionary:
+            matches = score_words(all_scores, prime_mapping, w)
+            match_count += len(matches)
+        print("Found {} matches".format(match_count))
