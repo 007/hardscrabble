@@ -1,2 +1,2 @@
-numexpr==2.6.9
+numexpr==2.8.5
 numpy==1.16.4
